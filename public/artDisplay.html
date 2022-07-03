@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Joan">
+    <style>
+        html,
+        body {
+
+            height: 100%;
+            margin: 0;
+
+            /*background-repeat: repeat-y;*/
+        }
+
+        /*for chrome/safari is webkit,moz is mozilla? but its for different browsers compatibility
+    0% is frame 1
+
+    100% is frame 2
+    */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @-moz-keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #imgDisplay {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            background-size: contain;
+            flex-wrap: wrap;
+        }
+
+        button {
+            width: 100px;
+            height: 45px;
+            border-style: solid;
+            border-radius: 5px;
+            border-width: medium;
+            border-color: black;
+            font-family: "Joan";
+
+        }
+
+        #buttonsDiv {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            -webkit-transition: transform 0.15s ease-in-out;
+            -moz-transition: transform 0.15s ease-in-out;
+            transition: transform 0.15ss ease-in-out;
+        }
+
+        #divViewImages {
+            padding: 5px;
+
+        }
+
+        #homeDiv {
+            padding: 5px;
+
+        }
+
+
+        #textDiv {
+            background-image: url("Backgrounds/artTransparent.jpg");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+            background-size: contain;
+            flex-wrap: wrap;
+        }
+
+        
+
+        #text {
+            border-style: solid;
+            border-radius: 5px;
+            border-width: medium;
+            border-color: black;
+            font-family: "Joan";
+            font-size: large;
+            width: 600px;
+            height: 200px;
+            padding-top: 100px;
+            padding-left: 100px;
+            padding-right: 100px;
+            background-color: #F5F5F5;
+            max-width: 100%;
+
+        }
+
+        #mainImgDiv {
+            width: 1000px;
+            height: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: azure;
+        }
+
+        .arrow {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+
+        }
+
+        #mainImg {
+            /* so smaller images arent stretched */
+            max-width: 1000px;
+            max-height: 800px;
+            /*auto keeps proportianality of image*/
+            height: auto;
+            animation: fadeIn 2s;
+            -webkit-animation: fadeIn 2s;
+            -moz-animation: fadeIn 2s;
+        }
+
+        .fade {
+            animation: fadeIn 2s;
+            -webkit-animation: fadeIn 2s;
+            -moz-animation: fadeIn 2s;
+        }
+
+        .arrowImg {
+            width: 100px;
+            height: 100px;
+        }
+
+        #xImg {
+            width: 30px;
+            height: 30px;
+        }
+
+        .arrowImg:hover {
+            transform: scale(1.15);
+            -webkit-transition: transform 0.15s ease-in-out;
+            -moz-transition: transform 0.15s ease-in-out;
+            transition: transform 0.15ss ease-in-out;
+        }
+
+        #xImg:hover {
+            transform: scale(1.15);
+            filter: brightness(0) invert(0.75);
+            -webkit-transition: transform 0.15s ease-in-out;
+            -moz-transition: transform 0.15s ease-in-out;
+            transition: transform 0.15ss ease-in-out;
+            -webkit-transition: opacity 0.15s ease-in-out;
+            -moz-transition: opacity 0.15s ease-in-out;
+            transition: opacity 0.15ss ease-in-out;
+        }
+
+        #leftDiv {
+            display: flex;
+            flex-direction: column;
+            height: 800px;
+        }
+
+        #xDiv {
+            height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 200px;
+
+        }
+        /*Learnt the hard way that order matters for media queries... */
+        @media (max-width: 900px) {
+            #text {
+                padding:10px;
+                padding-top: 200px;
+                height: 300px;
+                /* max width was what I needed... */
+                max-width: 400px;
+                
+            }
+
+
+        }
+
+        
+    </style>
+
+    <script>
+        //for now Images are hard coded
+        var imgArray = ["Art/Art1.jpg", "Art/Art2.jpg", "Art/Art3.jpg", "Art/Art4.png", "Art/Art5.jpg", "Art/Art6.jpg"]
+
+        var imgIndex = 0;
+
+
+        function displayGallery() {
+            //replace original view with image gallery using display property
+            document.getElementById("imgDisplay").style.display = "flex";
+            document.getElementById("textDiv").style.display = "none";
+
+            document.getElementById("imgDisplay").style.backgroundImage = "url('Backgrounds/galleryBlack.png')";
+            
+            imgIndex = 0;
+            document.getElementById("mainImg").src = imgArray[imgIndex];
+            imgNumberL = 1; 
+            document.getElementById("imgNo").textContent = `${imgNumberL} / ${imgArray.length}`;
+
+        }
+
+        //had to load all the events first
+        //also could not find a matching pair of transparent arrows （//･_･//)
+        window.onload = function events() {
+            console.log(imgIndex);
+            document.getElementById("leftArrow").addEventListener("click", function (e) {
+                //this is making the div part of the fade class so it fades,did not work without this
+                var imgStyle = document.getElementById("mainImgDiv").classList;
+                imgStyle.add("fade");
+                //go to previous image index
+                imgIndex--;
+                //if index value is -1 make it go to the end of the array
+                if (imgIndex === -1) {
+                    imgIndex = imgArray.length - 1;
+                }
+                let imgNumberL = imgIndex + 1;
+                //get image source from array
+                document.getElementById("mainImg").src = imgArray[imgIndex];
+                document.getElementById("imgNo").textContent = `${imgNumberL} / ${imgArray.length}`
+                console.log(`${imgNumberL} +  / ${imgArray.length}`);
+                //must remove it afterwards everytime so I can then add it back again
+                setTimeout(function () { imgStyle.remove("fade"); }, 2000);
+                
+            }
+            );
+
+            document.getElementById("rightArrow").addEventListener("click", function (e) {
+                var imgStyle = document.getElementById("mainImgDiv").classList;
+                imgStyle.add("fade");
+                //make index next image
+                imgIndex++;
+                //if index is array length, set it to the start
+                if (imgIndex === imgArray.length) {
+                    imgIndex = 0;
+                }
+                //get image source from array
+                let imgNumberR = imgIndex + 1;
+                document.getElementById("mainImg").src = imgArray[imgIndex];
+                document.getElementById("imgNo").textContent = `${imgNumberR} / ${imgArray.length}`
+                setTimeout(function () { imgStyle.remove("fade") }, 2000);
+                console.log(imgIndex)
+                console.log(imgNumberR);
+            }
+            );
+
+            //x button functionality, same type of logic
+            document.getElementById("xImg").addEventListener("click", function (e) {
+
+                document.getElementById("imgDisplay").style.display = "none";
+                document.getElementById("textDiv").style.display = "flex";
+                document.body.style.backgroundImage = "url('Backgrounds/artTransparent.jpg')";
+                imgIndex = 0;
+            });
+
+        }
+
+        function visitHome() {
+            window.location = 'index.html';
+        }
+    </script>
+</head>
+
+<body>
+    <div id="textDiv">
+        <div id="text">This is the art section of the website, it is quite CSS focused. Using animations,
+            transformations and hiding elements on mass. I used Event Listeners and arrays to go between images.
+        </div>
+        <div id="buttonsDiv">
+            <div id="divViewImages"><button id="btnViewImages" onclick="displayGallery();">View gallery</button></div>
+            <div id="homeDiv"><button id="btnHome" onclick="visitHome();">Home</button></div>
+        </div>
+    </div>
+    <div id="imgDisplay">
+        <div class="arrow" id="lArrowDiv">
+            <image class="arrowImg" id="leftArrow" alt="leftArrow" src="Backgrounds/arrowLeft.png"></image>
+        </div>
+        <div id="mainImgDiv">
+            <p id="imgNo">1/6</p>
+            <image id="mainImg" alt="mainImg" src="Art/Art1.jpg"></image>
+        </div>
+        <div id="leftDiv">
+            <div id="xDiv">
+                <image id="xImg" alt="x" src="Backgrounds/X.png"></image>
+            </div>
+            <div class="arrow" id="rArrowDiv">
+
+                <div>
+                    <image class="arrowImg" id="rightArrow" alt="rightArrow" src="Backgrounds/arrowRight.png"></image>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

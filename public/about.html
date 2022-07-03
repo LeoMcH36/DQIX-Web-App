@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @font-face {
+            font-family: "DQIX Font";
+            src: url("dragon-quest-ix.otf");
+        }
+
+        #mainImages {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        #serenaDiv {
+            display: flex;
+            width: 37%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #heroDiv {
+            width: 33%;
+            display: flex;
+            width: 600px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        html,
+        body {
+            background-image: url("Backgrounds/about.jpg");
+            background-repeat: repeat;
+            background-size: cover;
+            height: 100%;
+            margin: 0;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 900px;
+            flex-direction: column;
+        }
+
+        
+        
+
+        #fyggRow {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #text {
+            color: white;
+            width: 500px;
+            height: 500px;
+            background-color: black;
+            font-family: "DQIX Font";
+            padding: 25px;
+            border-width: medium;
+            border-color: #e8e8e8;
+            border-radius: 5px;
+            border-style: solid;
+        }
+        @media (max-width: 575px) {
+            #text {
+                
+                max-width: 400px;
+                padding:10px;
+                
+            }
+        }
+
+        button {
+            color: #e8e8e8;
+            background-color: black;
+            padding: 5px;
+            border-width: medium;
+            border-color: #e8e8e8;
+            border-radius: 5px;
+            font-family: "DQIX Font";
+        }
+
+        #buttons {
+            padding-top: "5px";
+        }
+    </style>
+    <script>
+        //this was not easy to make lol
+
+
+        //store each line in seperate variable to make things easier
+        //line length is specific to match audio as best as possible
+        var line1 = "This Web Application was created to help me improve my skills using certain software technologies."
+        var line2 = "These technologies are what I may have to use   for the new project that I will be working on."
+        var line3 = "So I want to arrive a bit more prepared for the tasks I'm given   so it's less of a shock."
+        var line4 = "The data ie character names,   groups and image paths etc   are stored in a   mySQL database."
+        var line5 = "This database is accessed using SQL queries which are written in node js using the mysql module."
+        var line6 = "The data is then sent to the screen you are now looking at using Express js (POST AND GET methods)."
+        var line7 = "Express js allows me to use the fetch API to send and recieve JSON data between the front end and the backend."
+        var line8 = "The screen which you are looking at now,   is using a mixture of JavaScript ,   HTML DOM and CSS."
+        var line9 = "I made great use of the flexbox properties for the HTML which I had heard was very useful, and it was."
+        var line10 = "To make this project a bit more interesting for me I made it DQIX themed, One of my favourite games."
+        var line11 = "Thank you for viewing - Leo                            o()xxxx[{::::::::::::::::::::::::::::::::::>*"
+
+        //store variables into array
+        var textArr = [line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11];
+
+        //get all the words from  sentence
+        function getWords(line) {
+            //words is an array
+            //console.log("getting words")
+            var words = line.split(" ")
+            //console.log(words)
+            return words;
+        }
+
+        //so it can only be run once
+        function disableButton() {
+            document.getElementById("btnBegin").removeAttribute("onclick");
+        }
+
+        function getLetters(words) {
+            //must be inside function
+            var letters = "";
+            //console.log("getting letters")
+            for (let i = 0; i < words.length; i++) {
+                //loop through all words in array
+                
+                for (let j = 0; j < words[i].length; j++) {
+                    //loop trhough letters of each word
+                    
+                    letters += words[i].charAt(j);
+                }
+                //add space between each word
+                letters += " ";
+            }
+            
+            //return array where each element is a letter or space
+            return letters;
+        }
+
+        //get everything together into 1 variable called content
+        function getContent() {
+            var content = "";
+            for (var l = 0; l < textArr.length; l++) {
+                content += getLetters(getWords(textArr[l]));
+            }
+            return content;
+        }
+
+        function playDialogueSound() {
+            var audio1 = new Audio("audio/dialogue.mp3");
+            audio1.volume = 0.5
+            audio1.play();
+
+        }
+        function playPageSound() {
+            var audio2 = new Audio("audio/aboutMusic.mp3");
+
+            audio2.play();
+
+        }
+        //manually create delay since setTimeout is not blocking and 
+        //doesnt stop the code from running
+        //do not open developer tools while this is running  (☉_☉)
+        function delay() {
+
+            for (let i = 0; i < 1500; i++) {
+                for (let j = 0; j < 350; j++) {
+                    console.log("");
+                }
+            }
+
+        }
+
+
+
+        //must be outside function so recursion doesnt reset it
+        //but because it is var  it keeps its value
+        var i = 0;
+
+        //function to write content
+        function writeText(content) {
+
+            //if true add delay between each letter
+            if (setTimeout(function () {
+
+
+                //first element gets printed because it needs its own check
+                if (i === 0) {
+                    playDialogueSound();
+                    document.getElementById('text').innerHTML += content[i];
+                }
+                //if element before was a . insert line break, > 0 to avoid crashing when i -1
+                if (i > 0) {
+                    if (content[i - 1] === ".") {
+                        document.getElementById('text').innerHTML += `<br>${content[i]} `;
+                        delay();
+                        playDialogueSound();
+
+                    }
+                    else {
+                        document.getElementById('text').innerHTML += content[i];
+
+                    }
+                }
+                //end at *
+                if (content[i] === "*") {
+                    console.log("stopped")
+
+                    return false;
+                }
+                
+                //increment for next element
+                i++;
+
+                //call function again but i will be 1 larger
+                writeText(getContent());
+
+
+                //25 milliseconds delay between each letter
+            }, 25));
+
+            return;
+        }
+
+
+        function returnHome() {
+            window.location = 'index.html';
+        }
+
+
+    </script>
+</head>
+
+<body>
+    <div id="mainImages">
+        <div id="serenaDiv">
+            <image id="Serena" alt="serena" src="characterImages/Serena.png"></image>
+        </div>
+        <div class="flex-container">
+            <!--<div id="fyggRow">
+                <image id="fygg" alt="fygg" src="Backgrounds/fyggSmaller2.png"></image>
+                <image id="fygg" alt="fygg" src="Backgrounds/fyggSmaller2.png"></image>
+                <image id="fygg" alt="fygg" src="Backgrounds/fyggSmaller2.png"></image>
+                <image id="fygg" alt="fygg" src="Backgrounds/fyggSmaller2.png"></image>
+            </div> -->
+            <div id="text"></div>
+            <div id="buttons">
+                <button id="btnBegin" onclick="writeText(getContent());playPageSound();disableButton()">Begin</button>
+                <button id="btnReturn" onclick="returnHome()">Return</button>
+            </div>
+
+        </div>
+        <div id="heroDiv">
+            <image id="Hero2" alt="Hero2" src="characterImages/Hero2.png"></image>
+        </div>
+    </div>
+</body>
+
+</html>

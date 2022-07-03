@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DQXI Characters</title>
+    <link rel="icon" type="image/x-icon" href="/Art/slime.ico">
+    <style>
+        @font-face {
+            font-family: "DQIX Font";
+            src: url("dragon-quest-ix.otf");
+        }
+
+        .flex-container {
+            display: flex;
+            height: 400px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        body {
+            background-image: url("Backgrounds/background.jpg");
+        }
+
+        #aboutDiv {
+            padding-bottom: 5px;
+        }
+
+        #selectCharacters {
+            width: 420px;
+            color: #e8e8e8;
+            background-color: black;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-width: medium;
+            border-color: #e8e8e8;
+            border-radius: 5px;
+            font-family: "DQIX Font";
+        }
+
+        button {
+            color: #e8e8e8;
+            background-color: black;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-width: medium;
+            border-color: #e8e8e8;
+            border-radius: 5px;
+            font-family: "DQIX Font";
+        }
+
+        .imgBtn {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+
+        .Buttons {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #imgDiv {
+            display: flex;
+            width: 470px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #mainImg {
+            height: 300px;
+        }
+
+        #pageDiv {
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+        #artDiv {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            
+        }
+    </style>
+
+
+    <script>
+        //play audio
+        function playMusic() {
+            var audio = new Audio("audio/Toward the Starry Sky.mp3");
+            //audio is originally too loud
+            audio.volume = 0.05;
+            audio.play();
+            init();
+        }
+
+        function playClickSound() {
+            var audio1 = new Audio("audio/click.mp3");
+            audio1.play();
+            console.log("click");
+        }
+
+        window.onload = function clkEventListener() {
+            //this was important, not sure why it wont work outside a method
+            //add event listener so the dynamically created elements have events
+            document.getElementById("selectCharacters").addEventListener("click", function (e) {
+                //if function has not been played before, to stop overlapping sound           
+                if (!init.called) {
+                    playMusic();
+                }
+                if (e.target.value != "Characters") {
+                    playClickSound();
+                }
+                //e.target.value is the value set for each option element
+                //run characterSearch and input the clicked element's value
+                //make sure first element which says characters doesn't do anything
+                if (e.target.value != "Characters") {
+                    characterSearch(e.target.value);
+                }
+                let select_item = document.getElementById('selectCharacters');
+                let options = select_item.getElementsByTagName('option');
+                //clicked elements get turned yellow
+                for (var i = 0; i < options.length; i++) {
+                    if (e.target.value === options[i].value && e.target.value != "Characters") {
+                        options[i].style.color = "#ebd834";
+
+                    }
+                }
+
+            }
+            );
+        }
+
+        
+        //js function used to check if a function has been called before
+        function init() {
+            init.called = true;
+        }
+
+
+        //returns image of character
+        async function characterSearch(name) {
+            //convert inputted name to JSON
+            const JSONName = { name };
+            console.log("posting...")
+            //describe the JSON you are posting and stringify it
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(JSONName)
+            }
+            //send options and store response of /image route to variable
+            const response = await fetch('/image', options);
+            //Convert response to JSON
+            const data = await response.json();
+            console.log(data);
+            //get value of img object from data and set image to this
+            //img is the name of the object sent in the node.js post method
+            document.getElementById("mainImg").src = data.img;
+
+
+        }
+
+
+        //this method will recieve a list of all the character names
+        //and will display as options in a select box
+        //wait until html has loaded before calling this method
+        async function listDisplay() {
+
+            //remove all previous options bar character
+
+            let select_item = document.getElementById('selectCharacters');
+            let options = select_item.getElementsByTagName('option');
+
+            for (var i = options.length; i > 0; i--) {
+                select_item.remove(i);
+            }
+
+            //send options and store response of /list route to variable           
+            const response = await fetch('/list');
+            //Convert response to JSON
+            const data = await response.json();
+            console.log(data);
+            //store values in a sentence to be split
+            var sentence = data.listNames;
+            //split sentence where there is a space
+            var splitSentence = sentence.split(" ");
+
+            //get the select box element and call it select
+            select = document.getElementById('selectCharacters');
+            //for loop to create options
+            //for some reason splitSentence is 1 too big, so reduce it
+            for (var i = 0; i < splitSentence.length - 1; i++) {
+                //create an option element
+                var opt = document.createElement('option');
+                //set it's value as the name i.e Sterling is item 0
+                opt.value = splitSentence[i];
+                //do the same for HTML
+                opt.textContent = splitSentence[i];
+
+                //append this option element to the select box
+                select.appendChild(opt);
+
+            }
+
+
+
+        }
+
+
+        async function updateDisplay(characterClass) {
+
+            //remove all previous options bar character
+            let select_item = document.getElementById('selectCharacters');
+            let options = select_item.getElementsByTagName('option');
+
+            for (var i = options.length; i > 0; i--) {
+                select_item.remove(i);
+            }
+            //send options and store response of /updateList route to variable           
+            const response = await fetch(`updateList/${characterClass}`);
+            //Convert response to JSON
+            const data = await response.json();
+            console.log(data);
+            //store values in a sentence to be split
+            var sentence = data.listNames;
+            //split sentence where there is a space
+            var splitSentence = sentence.split(" ");
+
+            //get the select box element and call it select
+            select = document.getElementById('selectCharacters');
+            //for loop to create options
+            //for some reason splitSentence is 1 too big, so reduce it
+            for (var i = 0; i < splitSentence.length - 1; i++) {
+                //create an option element
+                var opt = document.createElement('option');
+                //set it's value as the name i.e Sterling is item 0
+                opt.value = splitSentence[i];
+                //do the same for HTML
+                opt.textContent = splitSentence[i];
+
+                //append this option element to the select box
+                select.appendChild(opt);
+
+            }
+        }
+
+        function visitAbout() {
+            window.location = 'about.html';
+        }
+        function visitArt() {
+            window.location = 'artDisplay.html';
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <div id="pageDiv">
+    <div class="flex-container">
+
+        <div class="Buttons">
+            <button id="btnCelestrian" value="Celestrian"
+                onclick="updateDisplay(this.value);playClickSound();">Celestrian</button>
+            <button id="btnLeader" value="Leader" onclick="updateDisplay(this.value);playClickSound();">Leader</button>
+            <button id="btnMerchant" value="Merchant"
+                onclick="updateDisplay(this.value);playClickSound();">Merchant</button>
+            <button id="btnGortressGuerilla" value="Gortress Guerilla"
+                onclick="updateDisplay(this.value);playClickSound();">Gortress
+                Guerilla</button>
+        </div>
+
+        <div id="imgDiv">
+            <div id="aboutDiv">
+                <button id="btnAbout" value="about" onclick="visitAbout()">About This site</button>
+            </div>
+            <div id="mainImgDiv">
+                <img id="mainImg" src="characterImages/default.png" alt="DQ9 Image">
+            </div>
+
+            <div id="sltChars">
+
+                <select id="selectCharacters">
+                    <option value="Characters">Characters</option>
+
+                </select>
+            </div>
+            <div id="artDiv">
+                <button id="btnArt"  onclick="visitArt()">Art Gallery</button>
+            </div>
+        </div>
+
+
+
+        <div class="Buttons">
+            <button id="btnFaerie" value="faerie" onclick="updateDisplay(this.value);playClickSound();">faerie</button>
+            <button id="btnOther" value="Human" onclick="updateDisplay(this.value);playClickSound();">Other</button>
+            <button id="btnAll" value="All" onclick="listDisplay();playClickSound();">All</button>
+        </div>
+        
+    </div>
+    
+</div>
+</body>
+
+</html>
