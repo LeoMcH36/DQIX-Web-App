@@ -22,7 +22,7 @@ var con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: process.env.PASSWORD, 
-  database: "DQXI"
+  database: "***"
 });
 
 //run connect to database function
