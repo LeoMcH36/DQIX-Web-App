@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         @font-face {
             font-family: "DQIX Font";
@@ -16,15 +17,16 @@
 
         #serenaDiv {
             display: flex;
-            width: 37%;
+            width: 30%;
             justify-content: center;
             align-items: center;
         }
 
         #heroDiv {
-            width: 33%;
+            width: 26%;
             display: flex;
-            width: 600px;
+            width: 300px;
+            padding-left: 200px;
             justify-content: center;
             align-items: center;
         }
@@ -46,8 +48,8 @@
             flex-direction: column;
         }
 
-        
-        
+
+
 
         #fyggRow {
             display: flex;
@@ -66,14 +68,23 @@
             border-radius: 5px;
             border-style: solid;
         }
+
         @media (max-width: 575px) {
             #text {
-                
+
                 max-width: 400px;
-                padding:10px;
-                
+                padding: 10px;
+
             }
         }
+
+    @media (max-width: 1600px)
+    {
+
+        #heroDiv{
+            padding-left:30px;
+        }
+    }
 
         button {
             color: #e8e8e8;
@@ -90,7 +101,7 @@
         }
     </style>
     <script>
-        //this was not easy to make lol
+        const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
 
         //store each line in seperate variable to make things easier
@@ -130,16 +141,16 @@
             //console.log("getting letters")
             for (let i = 0; i < words.length; i++) {
                 //loop through all words in array
-                
+
                 for (let j = 0; j < words[i].length; j++) {
                     //loop trhough letters of each word
-                    
+
                     letters += words[i].charAt(j);
                 }
                 //add space between each word
                 letters += " ";
             }
-            
+
             //return array where each element is a letter or space
             return letters;
         }
@@ -165,18 +176,7 @@
             audio2.play();
 
         }
-        //manually create delay since setTimeout is not blocking and 
-        //doesnt stop the code from running
-        //do not open developer tools while this is running  (☉_☉)
-        function delay() {
-
-            for (let i = 0; i < 1500; i++) {
-                for (let j = 0; j < 350; j++) {
-                    console.log("");
-                }
-            }
-
-        }
+        
 
 
 
@@ -184,49 +184,30 @@
         //but because it is var  it keeps its value
         var i = 0;
 
-        //function to write content
-        function writeText(content) {
+        async function writeText(content) {
 
-            //if true add delay between each letter
-            if (setTimeout(function () {
-
-
-                //first element gets printed because it needs its own check
-                if (i === 0) {
+            for (element = 0; element < content.length; element++) {
+                if (element === 0) {
                     playDialogueSound();
-                    document.getElementById('text').innerHTML += content[i];
+                    document.getElementById('text').innerHTML = "";
+                    document.getElementById('text').innerHTML += content[element];
                 }
-                //if element before was a . insert line break, > 0 to avoid crashing when i -1
-                if (i > 0) {
-                    if (content[i - 1] === ".") {
-                        document.getElementById('text').innerHTML += `<br>${content[i]} `;
-                        delay();
+                if (element > 0) {
+                    document.getElementById('text').innerHTML += content[element];
+                    if (content[element - 1] === ".") {
+                        console.log("yoyoyoyo")
+                        document.getElementById('text').innerHTML += `<br>${content[element]} `;
+                        await sleep(950);
                         playDialogueSound();
 
                     }
-                    else {
-                        document.getElementById('text').innerHTML += content[i];
-
-                    }
                 }
-                //end at *
-                if (content[i] === "*") {
-                    console.log("stopped")
-
-                    return false;
+                if (content[element] === "*") {
+                    break;
                 }
-                
-                //increment for next element
-                i++;
-
-                //call function again but i will be 1 larger
-                writeText(getContent());
-
-
-                //25 milliseconds delay between each letter
-            }, 25));
-
-            return;
+                await sleep(25);
+            }
+            return "Done"
         }
 
 
