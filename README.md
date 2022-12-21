@@ -4,3 +4,4 @@ DQIX Web App to practice some skills like node.js json html DOM,css Flex, js ,my
 The About page Basically explains everything
 The Home page images wont work obviously because their paths were stored in a MySQL database.
 
+I will probably make this project a container when I get the chance
